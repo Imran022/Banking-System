@@ -48,7 +48,7 @@ class BankingSystem:
         return None
 
     def find_user_account(self, holder_name: str, account_number: str) -> Account | None:
-        """Find an account by holder name plus account number."""
+        """Find an account by holder name plus account number"""
         for account in self.accounts:
             if account.get_holder_name() == holder_name and account.get_account_number() == str(account_number):
                 return account
