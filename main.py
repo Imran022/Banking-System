@@ -11,8 +11,7 @@ Input files:
 Output files:
 - Bank Account Transaction File for the session date.
 
-Run:
-    python main.py
+
 """
 
 from datetime import datetime
