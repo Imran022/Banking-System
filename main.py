@@ -10,8 +10,9 @@ Input files:
 
 Output files:
 - Bank Account Transaction File for the session date.
-
-
+ 
+Run:
+    python main.py
 """
 
 from datetime import datetime
@@ -43,8 +44,6 @@ class BankingConsole:
         """Run command input loop and guided transaction/login flows."""
         self.out('Banking System Front End (Console)')
         self.out('Enter "login" to start a session.')
-
-        # Main input loop: process one line at a time until EOF.
         while True:
             try:
                 text = input('> ').strip()
@@ -54,13 +53,9 @@ class BankingConsole:
 
             if not text:
                 continue
-
-            # If a transaction/login prompt is active, continue that flow first.
             if self.current_flow:
                 self.handle_flow_input(text)
                 continue
-
-            # Otherwise treat the input as a top-level command.
             self.handle_command(text.lower())
 
     def load_accounts(self) -> bool:
@@ -82,7 +77,6 @@ class BankingConsole:
 
     def handle_command(self, command: str) -> None:
         """Handle top-level commands when no guided prompt flow is active."""
-        # Login starts a guided flow for mode + (optional) account holder.
         if command == 'login':
             if self.system.session_status()['is_logged_in']:
                 self.err('Already logged in. Please logout first.')
@@ -99,8 +93,6 @@ class BankingConsole:
             self.out(msg)
             self.write_transaction_file()
             return
-
-        # All transactional commands are handled through guided prompt steps.
         if command in {'withdrawal', 'withdraw', 'transfer', 'paybill', 'deposit', 'create', 'delete', 'disable', 'changeplan'}:
             self.start_transaction_flow(command)
             return
@@ -113,13 +105,9 @@ class BankingConsole:
         if not status['is_logged_in']:
             self.err('Must be logged in to perform transactions.')
             return
-
-        # Normalize command alias so downstream flow names stay consistent.
         tx = 'withdrawal' if command == 'withdraw' else command
         self.current_flow = tx
         self.flow_data = {}
-
-        # Admin mode asks for holder name first; standard mode skips that.
         is_admin = bool(status['is_admin'])
         if tx == 'withdrawal':
             self.current_flow = 'withdrawal_name' if is_admin else 'withdrawal_account'
@@ -149,8 +137,6 @@ class BankingConsole:
     def handle_flow_input(self, text: str) -> None:
         """Handle one input line while in login or transaction prompt flow."""
         flow = self.current_flow
-
-        # Login-mode flow has its own small state machine.
         if flow == 'login_mode':
             mode = text.lower()
             if mode == 'admin':
@@ -181,8 +167,6 @@ class BankingConsole:
     def handle_transaction_flow(self, text: str) -> None:
         """Handle one input line for any in-progress transaction prompt sequence."""
         flow = self.current_flow
-
-        # Each block below is one step in the guided transaction state machine.
         if flow == 'withdrawal_name':
             self.flow_data['name'] = text
             self.current_flow = 'withdrawal_account'
@@ -341,7 +325,6 @@ class BankingConsole:
 
     def write_transaction_file(self) -> None:
         """Write the daily Bank Account Transaction file to disk."""
-        # Output filename follows the required daily transaction-file convention.
         content = self.system.generate_transaction_file()
         filename = f"transaction_file_{datetime.now().strftime('%Y-%m-%d')}.txt"
         FileHandler.write_file(content, filename)
