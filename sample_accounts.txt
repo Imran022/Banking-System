@@ -1,0 +1,8 @@
+00001 John Doe             A 01000.00
+00002 Jane Smith           A 00500.00
+00003 Bob Johnson          A 00250.00
+00004 Alice Wonder         A 02000.00
+00005 Charlie Brown        D 00100.00
+00006 Diana Prince         A 05000.00
+00007 Eve Anderson         A 00750.00
+00000 END_OF_FILE          A 00000.00
