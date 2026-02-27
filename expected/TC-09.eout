@@ -1,0 +1,21 @@
+Banking System Front End (Console)
+Enter "login" to start a session.
+> Enter session type (standard/admin):
+> Enter account holder name:
+> Loaded 7 accounts.
+Standard user John Doe logged in.
+> Enter new account holder name:
+> Enter initial balance:
+> ERROR: Create account is a privileged transaction. Admin access required.
+> Enter account holder name:
+> Enter account number:
+> ERROR: Delete account is a privileged transaction. Admin access required.
+> Enter account holder name:
+> Enter account number:
+> ERROR: Disable account is a privileged transaction. Admin access required.
+> Enter account holder name:
+> Enter account number:
+> ERROR: Change plan is a privileged transaction. Admin access required.
+> Session ended. Transaction file ready for download.
+Transaction file written: outputs/TC-09.atf
+> Exiting.

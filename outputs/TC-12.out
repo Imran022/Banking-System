@@ -1,0 +1,17 @@
+Banking System Front End (Console)
+Enter "login" to start a session.
+> Enter session type (standard/admin):
+> Enter account holder name:
+> Loaded 7 accounts.
+Standard user John Doe logged in.
+> Enter source account number:
+> Enter destination account number:
+> Enter amount to transfer:
+> ERROR: Destination account not found.
+> Enter source account number:
+> Enter destination account number:
+> Enter amount to transfer:
+> ERROR: Maximum transfer per session is $1000.00.
+> Session ended. Transaction file ready for download.
+Transaction file written: outputs/TC-12.atf
+> Exiting.

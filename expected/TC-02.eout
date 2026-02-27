@@ -1,0 +1,20 @@
+Banking System Front End (Console)
+Enter "login" to start a session.
+> Enter session type (standard/admin):
+> Loaded 7 accounts.
+Admin session started.
+> Enter new account holder name:
+> Enter initial balance:
+> Account 00008 created for New Account User (available next session).
+> Enter account holder name:
+> Enter account number:
+> Account 00003 for Bob Johnson deleted.
+> Enter account holder name:
+> Enter account number:
+> Account 00006 for Diana Prince disabled.
+> Enter account holder name:
+> Enter account number:
+> Payment plan changed for account 00002.
+> Session ended. Transaction file ready for download.
+Transaction file written: outputs/TC-02.atf
+> Exiting.

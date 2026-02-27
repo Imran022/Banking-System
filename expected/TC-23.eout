@@ -1,0 +1,13 @@
+Banking System Front End (Console)
+Enter "login" to start a session.
+> Enter session type (standard/admin):
+> Enter account holder name:
+> Loaded 7 accounts.
+Standard user Jane Smith logged in.
+> Enter account number:
+> Enter company code (EC, CQ, FI):
+> Enter amount to pay:
+> ERROR: Maximum paybill per session is $2000.00.
+> Session ended. Transaction file ready for download.
+Transaction file written: outputs/TC-23.atf
+> Exiting.

@@ -1,0 +1,21 @@
+Banking System Front End (Console)
+Enter "login" to start a session.
+> Enter session type (standard/admin):
+> Enter account holder name:
+> Loaded 7 accounts.
+Standard user Jane Smith logged in.
+> Enter account number:
+> Enter company code (EC, CQ, FI):
+> Enter amount to pay:
+> Bill payment of $300.00 to EC successful.
+> Enter account number:
+> Enter company code (EC, CQ, FI):
+> Enter amount to pay:
+> Bill payment of $200.00 to CQ successful.
+> Enter account number:
+> Enter company code (EC, CQ, FI):
+> Enter amount to pay:
+> ERROR: Insufficient funds.
+> Session ended. Transaction file ready for download.
+Transaction file written: outputs/TC-14.atf
+> Exiting.

@@ -1,0 +1,14 @@
+Banking System Front End (Console)
+Enter "login" to start a session.
+> ERROR: Must be logged in to perform transactions.
+> Enter session type (standard/admin):
+> Enter account holder name:
+> Loaded 7 accounts.
+Standard user John Doe logged in.
+> ERROR: Already logged in. Please logout first.
+> ERROR: Invalid command. Use login, logout, withdrawal, transfer, paybill, deposit, create, delete, disable, changeplan.
+> ERROR: Invalid command. Use login, logout, withdrawal, transfer, paybill, deposit, create, delete, disable, changeplan.
+> Session ended. Transaction file ready for download.
+Transaction file written: outputs/TC-10.atf
+> ERROR: Must be logged in to perform transactions.
+> Exiting.

@@ -1,0 +1,25 @@
+Banking System Front End (Console)
+Enter "login" to start a session.
+> Enter session type (standard/admin):
+> Enter account holder name:
+> Loaded 7 accounts.
+Standard user John Doe logged in.
+> ERROR: Invalid command. Use login, logout, withdrawal, transfer, paybill, deposit, create, delete, disable, changeplan.
+> Enter account number:
+> Enter amount to withdraw:
+> ERROR: Invalid amount. Enter a positive number.
+Enter amount to withdraw:
+> Withdrawal of $50.00 successful. New balance: $950.00
+> Enter account number:
+> Enter amount to withdraw:
+> ERROR: Invalid amount. Enter a positive number.
+Enter amount to withdraw:
+> Withdrawal of $50.00 successful. New balance: $900.00
+> Enter account number:
+> Enter amount to withdraw:
+> ERROR: Invalid amount. Enter a positive number.
+Enter amount to withdraw:
+> Withdrawal of $50.00 successful. New balance: $850.00
+> Session ended. Transaction file ready for download.
+Transaction file written: outputs/TC-16.atf
+> Exiting.
