@@ -1,0 +1,25 @@
+Banking System Front End (Console)
+Enter "login" to start a session.
+> Enter session type (standard/admin):
+> Loaded 7 accounts.
+Admin session started.
+> Enter account holder name:
+> Enter account number:
+> Account 00002 for Jane Smith deleted.
+> Enter account holder name:
+> Enter account number:
+> Enter amount to deposit:
+> ERROR: Account not found.
+> Enter account holder name:
+> Enter account number:
+> ERROR: Account is already disabled.
+> Enter account holder name:
+> Enter account number:
+> Account 00004 for Alice Wonder disabled.
+> Enter account holder name:
+> Enter account number:
+> Enter amount to withdraw:
+> ERROR: Account is disabled.
+> Session ended. Transaction file ready for download.
+Transaction file written: tests/outputs/transactions/tc_13_delete_and_disable_constraints.atf
+> Exiting.

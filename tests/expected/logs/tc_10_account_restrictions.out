@@ -1,0 +1,18 @@
+Banking System Front End (Console)
+Enter "login" to start a session.
+> Enter session type (standard/admin):
+> Loaded 7 accounts.
+Admin session started.
+> Enter account holder name:
+> Enter account number:
+> Enter amount to withdraw:
+> ERROR: Account is disabled.
+> Enter new account holder name:
+> Enter initial balance:
+> Account 00008 created for Alpha User (available next session).
+> Enter new account holder name:
+> Enter initial balance:
+> ERROR: Account number already exists.
+> Session ended. Transaction file ready for download.
+Transaction file written: tests/outputs/transactions/tc_10_account_restrictions.atf
+> Exiting.

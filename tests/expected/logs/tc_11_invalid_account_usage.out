@@ -1,0 +1,23 @@
+Banking System Front End (Console)
+Enter "login" to start a session.
+> Enter session type (standard/admin):
+> Enter account holder name:
+> Loaded 7 accounts.
+Standard user John Doe logged in.
+> Enter account number:
+> Enter amount to withdraw:
+> ERROR: Account not found.
+> Enter source account number:
+> Enter destination account number:
+> Enter amount to transfer:
+> ERROR: Source account not found.
+> Enter account number:
+> Enter company code (EC, CQ, FI):
+> Enter amount to pay:
+> ERROR: Account not found.
+> Enter account number:
+> Enter amount to deposit:
+> ERROR: Account not found.
+> Session ended. Transaction file ready for download.
+Transaction file written: tests/outputs/transactions/tc_11_invalid_account_usage.atf
+> Exiting.

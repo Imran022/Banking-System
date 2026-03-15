@@ -1,56 +1,50 @@
-# Banking System Front End - Phase 2
+# Banking System - Phases 3 and 4
 
-This repository contains a Phase 2 rapid prototype of the CSCI 3060U Banking System Front End.
-The implementation is console-based, intentionally simple, and organized for readability.
+This repository contains the console-based CSCI 3060U Banking System implementation for:
 
-## Rubric Alignment (Phase 2)
+- the Front End ATM session flow from Phases 2-3
+- the new Phase 4 Back End overnight batch processor
 
-- Console application (terminal I/O only)
-- Reads the Current Bank Accounts file during login
-- Processes required Front End transaction codes
-- Writes Bank Account Transaction file on logout
-- Includes class/method documentation and design document
-
-## Run
+## Front End Run
 
 ```bash
-python main.py
+python main.py <current_accounts_file> <transaction_output_file>
 ```
 
-## Input and Output
+Example:
 
-Input file:
-- Current Bank Accounts File (fixed-width, 37 chars per account line), prompted during login
+```bash
+python main.py sample_accounts.txt transout.atf
+```
 
-Output file:
-- Bank Account Transaction File written on logout as `transaction_file_YYYY-MM-DD.txt`
+## Back End Run
 
-Console I/O:
-- Reads commands and prompted values from stdin
-- Prints prompts/results/errors to stdout
+```bash
+python backend_main.py <old_master_file> <merged_transaction_file> <new_master_file> <new_current_file>
+```
 
-## Commands
+## Files and Formats
 
-- `login`
-- `logout`
-- `withdrawal` (`withdraw` alias)
-- `transfer`
-- `paybill`
-- `deposit`
-- `create`
-- `delete`
-- `disable`
-- `changeplan`
+- Current accounts input supports the original layout and the optional plan-aware variant (`SP`/`NP`) to match the course discrepancy note.
+- Master accounts input supports the original Phase 4 layout and can also read the plan-aware starter-code style when present.
+- The Back End preserves the plan-field style it receives in the old master file instead of always forcing the extended format.
 
-## Source Files
+## Main Source Files
 
-- `main.py`: console interaction and transaction prompt flow
-- `banking_system.py`: transaction orchestration and session state
-- `validator.py`: business-rule validation
-- `file_handler.py`: fixed-format file parsing and writing
-- `account.py`: account entity
-- `transaction.py`: transaction entity and output-line formatting
+- `main.py`: Front End CLI and guided transaction prompts
+- `banking_system.py`: Front End session orchestration
+- `validator.py`: Front End business-rule validation
+- `backend_main.py`: Back End CLI entry point
+- `batch_processor.py`: Back End transaction application and constraint logging
+- `file_handler.py`: shared fixed-width file parsing and writing
+- `account.py`: shared account model for current and master files
+- `transaction.py`: shared transaction model and file serialization
+
+## Tests
+
+- Front End regression scripts: `bash scripts/run_tests.sh` then `bash scripts/check_outputs.sh`
+- Back End/unit tests: `python -m unittest discover -s tests -p "test_*.py"`
 
 ## Design Deliverable
 
-- `PHASE2_DESIGN.md`: architecture, UML class diagram, and class/method intention table
+- `PHASE4_DESIGN.md`: Phase 4 architecture, UML-style class overview, and class/method intention table

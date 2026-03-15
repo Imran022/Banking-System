@@ -1,0 +1,52 @@
+Banking System Front End (Console)
+Enter "login" to start a session.
+> Enter session type (standard/admin):
+> Enter account holder name:
+> Loaded 7 accounts.
+Standard user Diana Prince logged in.
+> Enter account number:
+> Enter amount to withdraw:
+> Withdrawal of $500.00 successful. New balance: $4500.00
+> Enter account number:
+> Enter amount to withdraw:
+> ERROR: Maximum withdrawal per session is $500.00.
+> Enter source account number:
+> Enter destination account number:
+> Enter amount to transfer:
+> Transfer of $400.00 successful.
+> Enter source account number:
+> Enter destination account number:
+> Enter amount to transfer:
+> Transfer of $600.00 successful.
+> Enter source account number:
+> Enter destination account number:
+> Enter amount to transfer:
+> ERROR: Maximum transfer per session is $1000.00.
+> Enter account number:
+> Enter company code (EC, CQ, FI):
+> Enter amount to pay:
+> Bill payment of $1000.00 to EC successful.
+> Enter account number:
+> Enter company code (EC, CQ, FI):
+> Enter amount to pay:
+> Bill payment of $1000.00 to CQ successful.
+> Enter account number:
+> Enter company code (EC, CQ, FI):
+> Enter amount to pay:
+> ERROR: Maximum paybill per session is $2000.00.
+> Session ended. Transaction file ready for download.
+Transaction file written: tests/outputs/transactions/tc_14_boundary_and_cumulative_limits.atf
+> Enter session type (standard/admin):
+> Enter account holder name:
+> Loaded 7 accounts.
+Standard user Alice Wonder logged in.
+> Enter account number:
+> Enter company code (EC, CQ, FI):
+> Enter amount to pay:
+> Bill payment of $2000.00 to EC successful.
+> Enter account number:
+> Enter amount to withdraw:
+> ERROR: Insufficient funds.
+> Session ended. Transaction file ready for download.
+Transaction file written: tests/outputs/transactions/tc_14_boundary_and_cumulative_limits.atf
+> Exiting.

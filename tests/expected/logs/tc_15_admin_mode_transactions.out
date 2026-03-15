@@ -1,0 +1,22 @@
+Banking System Front End (Console)
+Enter "login" to start a session.
+> Enter session type (standard/admin):
+> Loaded 7 accounts.
+Admin session started.
+> Enter account holder name:
+> Enter account number:
+> Enter amount to withdraw:
+> Withdrawal of $600.00 successful. New balance: $4400.00
+> Enter account holder name:
+> Enter source account number:
+> Enter destination account number:
+> Enter amount to transfer:
+> Transfer of $1500.00 successful.
+> Enter account holder name:
+> Enter account number:
+> Enter company code (EC, CQ, FI):
+> Enter amount to pay:
+> Bill payment of $2500.00 to EC successful.
+> Session ended. Transaction file ready for download.
+Transaction file written: tests/outputs/transactions/tc_15_admin_mode_transactions.atf
+> Exiting.

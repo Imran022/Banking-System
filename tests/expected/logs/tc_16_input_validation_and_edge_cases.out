@@ -1,0 +1,32 @@
+Banking System Front End (Console)
+Enter "login" to start a session.
+> ERROR: Invalid command. Use login, logout, withdrawal, transfer, paybill, deposit, create, delete, disable, changeplan.
+> Enter session type (standard/admin):
+> ERROR: Invalid mode. Use standard or admin.
+> Enter account holder name:
+> Loaded 7 accounts.
+Standard user John Doe logged in.
+> Enter account number:
+> Enter amount to withdraw:
+> ERROR: Invalid amount. Enter a positive number.
+Enter amount to withdraw:
+> ERROR: Invalid amount. Enter a positive number.
+Enter amount to withdraw:
+> Withdrawal of $1.00 successful. New balance: $999.00
+> ERROR: Invalid command. Use login, logout, withdrawal, transfer, paybill, deposit, create, delete, disable, changeplan.
+> Session ended. Transaction file ready for download.
+Transaction file written: tests/outputs/transactions/tc_16_input_validation_and_edge_cases.atf
+> Enter session type (standard/admin):
+> Loaded 7 accounts.
+Admin session started.
+> Enter new account holder name:
+> Enter initial balance:
+> ERROR: Account holder name must be at most 20 characters.
+> Enter account holder name:
+> Enter account number:
+> Enter company code (EC, CQ, FI):
+> Enter amount to pay:
+> ERROR: Invalid company code. Valid codes: EC, CQ, FI.
+> Session ended. Transaction file ready for download.
+Transaction file written: tests/outputs/transactions/tc_16_input_validation_and_edge_cases.atf
+> Exiting.

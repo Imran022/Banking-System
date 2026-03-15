@@ -161,7 +161,7 @@ class BankingSystem:
             return False, 'Create account is a privileged transaction. Admin access required.'
 
         new_number = self._generate_account_number()
-        exists = self.find_account_by_number(new_number) is not None
+        exists = self.find_account_by_number(new_number) is not None or self._has_pending_create(new_number)
         error = self.validator.validate_create(holder_name, initial_balance, exists)
         if error:
             return False, error
@@ -231,3 +231,10 @@ class BankingSystem:
             if value > max_number:
                 max_number = value
         return str(max_number + 1).zfill(5)
+
+    def _has_pending_create(self, account_number: str) -> bool:
+        """Return True when the current session already staged a create for the same account number."""
+        for transaction in self.transactions:
+            if transaction.code == Transaction.CODES['CREATE'] and transaction.account_number == account_number:
+                return True
+        return False

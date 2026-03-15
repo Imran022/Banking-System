@@ -333,6 +333,7 @@ class BankingConsole:
         """Write the daily Bank Account Transaction file to disk using the CLI-provided output path."""
         content = self.system.generate_transaction_file()
         FileHandler.write_file(content, self.output_file)
+        self.system.transactions.clear()
         self.out(f'Transaction file written: {self.output_file}')
 
 

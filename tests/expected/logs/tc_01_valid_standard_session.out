@@ -1,0 +1,15 @@
+Banking System Front End (Console)
+Enter "login" to start a session.
+> Enter session type (standard/admin):
+> Enter account holder name:
+> Loaded 7 accounts.
+Standard user John Doe logged in.
+> Enter account number:
+> Enter amount to withdraw:
+> Withdrawal of $50.00 successful. New balance: $950.00
+> Enter account number:
+> Enter amount to deposit:
+> Deposit of $25.00 accepted (available next session).
+> Session ended. Transaction file ready for download.
+Transaction file written: tests/outputs/transactions/tc_01_valid_standard_session.atf
+> Exiting.

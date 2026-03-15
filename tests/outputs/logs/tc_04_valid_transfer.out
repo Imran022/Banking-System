@@ -1,0 +1,13 @@
+Banking System Front End (Console)
+Enter "login" to start a session.
+> Enter session type (standard/admin):
+> Enter account holder name:
+> Loaded 7 accounts.
+Standard user John Doe logged in.
+> Enter source account number:
+> Enter destination account number:
+> Enter amount to transfer:
+> Transfer of $100.00 successful.
+> Session ended. Transaction file ready for download.
+Transaction file written: tests/outputs/transactions/tc_04_valid_transfer.atf
+> Exiting.

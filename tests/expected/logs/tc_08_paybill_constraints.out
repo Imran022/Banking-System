@@ -1,0 +1,17 @@
+Banking System Front End (Console)
+Enter "login" to start a session.
+> Enter session type (standard/admin):
+> Enter account holder name:
+> Loaded 7 accounts.
+Standard user John Doe logged in.
+> Enter account number:
+> Enter company code (EC, CQ, FI):
+> Enter amount to pay:
+> ERROR: Maximum paybill per session is $2000.00.
+> Enter account number:
+> Enter company code (EC, CQ, FI):
+> Enter amount to pay:
+> ERROR: Invalid company code. Valid codes: EC, CQ, FI.
+> Session ended. Transaction file ready for download.
+Transaction file written: tests/outputs/transactions/tc_08_paybill_constraints.atf
+> Exiting.

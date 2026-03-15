@@ -1,0 +1,13 @@
+Banking System Front End (Console)
+Enter "login" to start a session.
+> ERROR: Must be logged in to perform transactions.
+> Enter session type (standard/admin):
+> Enter account holder name:
+> Loaded 7 accounts.
+Standard user John Doe logged in.
+> ERROR: Already logged in. Please logout first.
+> Session ended. Transaction file ready for download.
+Transaction file written: tests/outputs/transactions/tc_03_session_constraints.atf
+> ERROR: Must be logged in to perform transactions.
+> ERROR: Not logged in.
+> Exiting.
