@@ -2,176 +2,120 @@
 Phase 5 - White Box Unit Tests
 CSCI 3060U
 
-Method 1 (Statement Coverage):  Validator.validate_withdrawal
-Method 2 (Decision + Loop Coverage): BankingSystem._generate_account_number
+Method 1 (Statement Coverage): BatchProcessor._apply_create
+Method 2 (Decision + Loop Coverage): FileHandler.parse_master_accounts_file
 """
 
-import sys
-import os
 import unittest
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
-
 from account import Account
-from banking_system import BankingSystem
-from validator import Validator
+from batch_processor import BatchProcessor
+from file_handler import FileHandler
+from transaction import Transaction
 
 
-def make_account(number='00001', name='John Doe', status='A',
-                 balance=1000.00, plan=Account.NON_STUDENT_PLAN) -> Account:
-    return Account(number, name, status, balance, total_transactions=0, plan=plan)
+def make_account(
+    number: str = '00001',
+    name: str = 'John Doe',
+    status: str = 'A',
+    balance: float = 1000.00,
+    total_transactions: int = 0,
+    plan: str = Account.NON_STUDENT_PLAN,
+) -> Account:
+    return Account(number, name, status, balance, total_transactions=total_transactions, plan=plan)
 
 
-# ===========================================================================
-# METHOD 1 — Statement Coverage
-
-# ===========================================================================
-
-class TestValidateWithdrawalStatementCoverage(unittest.TestCase):
-
-    def setUp(self):
-        self.v = Validator()
-
-    def test_sc1_account_not_found(self):
-        # S1: account is None
-        result = self.v.validate_withdrawal(None, 100.0, False, 0.0)
-        self.assertEqual('Account not found.', result)
-
-    def test_sc2_account_disabled(self):
-        # S2: account exists but is disabled
-        acc = make_account(status='D')
-        result = self.v.validate_withdrawal(acc, 100.0, False, 0.0)
-        self.assertEqual('Account is disabled.', result)
-
-    def test_sc3_amount_not_positive(self):
-        # S3: negative amount
-        acc = make_account(balance=1000.0)
-        result = self.v.validate_withdrawal(acc, -5.0, False, 0.0)
-        self.assertEqual('Amount must be positive.', result)
-
-    def test_sc3b_amount_zero(self):
-        # S3: amount of exactly 0
-        acc = make_account(balance=1000.0)
-        result = self.v.validate_withdrawal(acc, 0.0, False, 0.0)
-        self.assertEqual('Amount must be positive.', result)
-
-    def test_sc4_session_limit_exceeded_standard(self):
-        # S4: standard mode, 600 > 500 session limit
-        acc = make_account(balance=1000.0)
-        result = self.v.validate_withdrawal(acc, 600.0, False, 0.0)
-        self.assertIn('Maximum withdrawal', result)
-
-    def test_sc4_admin_bypasses_session_limit(self):
-        # S4: admin mode ignores session limit
-        acc = make_account(balance=1000.0)
-        result = self.v.validate_withdrawal(acc, 600.0, True, 0.0)
-        self.assertIsNone(result)
-
-    def test_sc4c_cumulative_exactly_at_limit(self):
-        # S4: 400 already withdrawn + 100 = exactly 500, should pass
-        acc = make_account(balance=1000.0)
-        result = self.v.validate_withdrawal(acc, 100.0, False, 400.0)
-        self.assertIsNone(result)
-
-    def test_sc4d_cumulative_one_cent_over_limit(self):
-        # S4: 400.01 already withdrawn + 100 = 500.01, should fail
-        acc = make_account(balance=1000.0)
-        result = self.v.validate_withdrawal(acc, 100.0, False, 400.01)
-        self.assertIn('Maximum withdrawal', result)
-
-    def test_sc5_insufficient_funds(self):
-        # S5: balance too low
-        acc = make_account(balance=10.0)
-        result = self.v.validate_withdrawal(acc, 50.0, False, 0.0)
-        self.assertEqual('Insufficient funds.', result)
-
-    def test_sc6_valid_withdrawal(self):
-        # S6: all checks pass, should return None
-        acc = make_account(balance=1000.0)
-        result = self.v.validate_withdrawal(acc, 50.0, False, 0.0)
-        self.assertIsNone(result)
-
-    def test_sc6b_cumulative_session_within_limit(self):
-        # S6: 200 already withdrawn + 200 more = 400, within limit
-        acc = make_account(balance=1000.0)
-        result = self.v.validate_withdrawal(acc, 200.0, False, 200.0)
-        self.assertIsNone(result)
+def make_master_line(
+    account_number: str,
+    holder_name: str,
+    status: str,
+    balance: float,
+    total_transactions: int,
+    plan: str | None = None,
+) -> str:
+    base = (
+        f"{str(account_number).zfill(5)} "
+        f"{holder_name.ljust(20)[:20]} "
+        f"{status} "
+        f"{balance:08.2f} "
+        f"{str(total_transactions).zfill(4)}"
+    )
+    if plan is None:
+        return base
+    return f"{base} {plan}"
 
 
-# ===========================================================================
-# METHOD 2 — Decision + Loop Coverage
+class TestApplyCreateStatementCoverage(unittest.TestCase):
+    """Statement coverage for the Back End create-account handler."""
 
-# ===========================================================================
+    def test_sc1_duplicate_account_creation_logs_constraint(self) -> None:
+        processor = BatchProcessor([make_account(number='00001', name='Existing User', balance=500.0)])
 
-class TestGenerateAccountNumberDecisionLoop(unittest.TestCase):
+        processor._apply_create(Transaction.create_account('Jane Smith', '00001', 100.0))
 
-    def _make_system_with_accounts(self, account_numbers: list) -> BankingSystem:
-        bs = BankingSystem()
-        bs.accounts = [make_account(number=n) for n in account_numbers]
-        return bs
+        self.assertEqual(1, len(processor.failed_constraints))
+        self.assertIn('Duplicate account creation prevented for account 00001', processor.failed_constraints[0])
+        self.assertEqual(['00001'], sorted(processor.accounts_by_number.keys()))
+        self.assertEqual('Existing User', processor.accounts_by_number['00001'].get_holder_name())
 
-    def test_dl1_no_accounts_returns_00001(self):
-        # Loop: 0 iterations
-        bs = self._make_system_with_accounts([])
-        result = bs._generate_account_number()
-        self.assertEqual('00001', result)
+    def test_sc2_new_account_is_created_with_backend_defaults(self) -> None:
+        processor = BatchProcessor([make_account(number='00001', name='Existing User', balance=500.0)])
 
-    def test_dl2_single_account_increments(self):
-        # Loop: 1 iteration, D1 True
-        bs = self._make_system_with_accounts(['00005'])
-        result = bs._generate_account_number()
-        self.assertEqual('00006', result)
+        processor._apply_create(Transaction.create_account('Jane Smith', '00002', 150.0))
 
-    def test_dl3_multiple_accounts_picks_max(self):
-        # Loop: 3 iterations, D1 True then True then False
-        bs = self._make_system_with_accounts(['00003', '00007', '00002'])
-        result = bs._generate_account_number()
-        self.assertEqual('00008', result)
+        self.assertEqual([], processor.failed_constraints)
+        self.assertEqual(['00001', '00002'], sorted(processor.accounts_by_number.keys()))
+        created = processor.accounts_by_number['00002']
+        self.assertEqual('Jane Smith', created.get_holder_name())
+        self.assertEqual('A', created.get_status())
+        self.assertEqual(150.0, created.get_balance())
+        self.assertEqual(0, created.get_total_transactions())
+        self.assertEqual(Account.STUDENT_PLAN, created.get_plan())
 
-    def test_dl4_descending_order_picks_first(self):
-        # Loop: 2 iterations, D1 True then False
-        bs = self._make_system_with_accounts(['00007', '00003'])
-        result = bs._generate_account_number()
-        self.assertEqual('00008', result)
 
-    def test_dl5_non_numeric_account_skipped(self):
-        # Loop: 1 iteration, except/continue path taken
-        bs = self._make_system_with_accounts(['XXXXX'])
-        result = bs._generate_account_number()
-        self.assertEqual('00001', result)
+class TestParseMasterAccountsDecisionLoopCoverage(unittest.TestCase):
+    """Decision and loop coverage for Back End master-account parsing."""
 
-    def test_dl6_mixed_numeric_and_non_numeric(self):
-        # Loop: 3 iterations, numeric then non-numeric (skipped) then numeric
-        bs = BankingSystem()
-        bs.accounts = [
-            make_account(number='00005'),
-            make_account(number='XXXXX'),
-            make_account(number='00009'),
-        ]
-        result = bs._generate_account_number()
-        self.assertEqual('00010', result)
+    def setUp(self) -> None:
+        self.handler = FileHandler()
 
-    def test_dl7_high_value_account(self):
-        # Loop: 1 iteration, boundary value 99999
-        bs = self._make_system_with_accounts(['99999'])
-        result = bs._generate_account_number()
-        self.assertEqual('100000', result)
+    def test_dl1_empty_file_returns_no_accounts(self) -> None:
+        accounts = self.handler.parse_master_accounts_file('')
+        self.assertEqual([], accounts)
 
-    def test_dl8_all_non_numeric_returns_00001(self):
-        # Loop: 2 iterations, both skip via except
-        bs = BankingSystem()
-        bs.accounts = [
-            make_account(number='AAAAA'),
-            make_account(number='BBBBB'),
-        ]
-        result = bs._generate_account_number()
-        self.assertEqual('00001', result)
+    def test_dl2_single_valid_record_without_plan(self) -> None:
+        content = make_master_line('00001', 'John Doe', 'A', 1000.0, 3) + '\n'
 
-    def test_dl9_account_00001_increments_to_00002(self):
-        # Loop: 1 iteration, D1 True
-        bs = self._make_system_with_accounts(['00001'])
-        result = bs._generate_account_number()
-        self.assertEqual('00002', result)
+        accounts = self.handler.parse_master_accounts_file(content)
+
+        self.assertEqual(1, len(accounts))
+        self.assertEqual('00001', accounts[0].get_account_number())
+        self.assertEqual(Account.NON_STUDENT_PLAN, accounts[0].get_plan())
+        self.assertEqual(3, accounts[0].get_total_transactions())
+
+    def test_dl3_multiple_records_with_blank_line_and_optional_plan(self) -> None:
+        content = (
+            make_master_line('00001', 'John Doe', 'A', 1000.0, 3, Account.STUDENT_PLAN) + '\n'
+            '\n'
+            + make_master_line('00002', 'Jane Smith', 'D', 500.0, 12) + '\n'
+        )
+
+        accounts = self.handler.parse_master_accounts_file(content)
+
+        self.assertEqual(2, len(accounts))
+        self.assertEqual(Account.STUDENT_PLAN, accounts[0].get_plan())
+        self.assertEqual(Account.NON_STUDENT_PLAN, accounts[1].get_plan())
+        self.assertEqual('D', accounts[1].get_status())
+
+    def test_dl4_short_record_raises_value_error(self) -> None:
+        with self.assertRaisesRegex(ValueError, 'too short'):
+            self.handler.parse_master_accounts_file('short line\n')
+
+    def test_dl5_invalid_numeric_fields_raise_value_error(self) -> None:
+        invalid = "00001 John Doe             A X1000.00 0003\n"
+
+        with self.assertRaisesRegex(ValueError, 'invalid numeric fields'):
+            self.handler.parse_master_accounts_file(invalid)
 
 
 if __name__ == '__main__':
