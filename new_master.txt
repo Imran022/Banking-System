@@ -1,0 +1,8 @@
+00000 END_OF_FILE          A 00000.00 0000 N
+00001 John Doe             A 00949.80 0002 N
+00002 Jane Smith           A 00500.00 0000 NP
+00004 Alice Wonder         A 02000.00 0000 N
+00005 Charlie Brown        D 00100.00 0000 N
+00006 Diana Prince         D 05000.00 0000 N
+00007 Eve Anderson         A 00750.00 0000 N
+00008 New Account User     A 00500.00 0000 SP
