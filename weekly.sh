@@ -1,8 +1,8 @@
 #!/bin/bash
 # weekly.sh
-# Simulates 7 days of banking by calling daily.sh once per day.
-# Each day uses a different set of session inputs from the inputs/ folder.
-# The current and master accounts files chain forward day to day.
+# Simulates seven days of banking by calling daily.sh once per day.
+# Each day uses a different set of Front End transaction sessions, and
+# each day's new Current/Master files become the next day's inputs.
 #
 # Usage:
 #   ./weekly.sh <initial_current_accounts> <initial_master_accounts>
@@ -21,14 +21,12 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 DAILY_SCRIPT="$SCRIPT_DIR/daily.sh"
 INPUTS_DIR="$SCRIPT_DIR/inputs"
 
-# Output folder for all daily results
 WEEKLY_WORK_DIR="$SCRIPT_DIR/weekly_run_$(date +%Y%m%d_%H%M%S)"
 mkdir -p "$WEEKLY_WORK_DIR"
 
 echo "Starting 7-day simulation. Output folder: $WEEKLY_WORK_DIR"
 echo ""
 
-# Session inputs for each day, using the Phase 1 test cases
 DAY1_SESSIONS=("$INPUTS_DIR/TC-01" "$INPUTS_DIR/TC-04" "$INPUTS_DIR/TC-07")
 DAY2_SESSIONS=("$INPUTS_DIR/TC-02" "$INPUTS_DIR/TC-03" "$INPUTS_DIR/TC-08")
 DAY3_SESSIONS=("$INPUTS_DIR/TC-05" "$INPUTS_DIR/TC-06" "$INPUTS_DIR/TC-09")
@@ -43,8 +41,11 @@ MASTER_ACCOUNTS="$INITIAL_MASTER"
 for DAY in 1 2 3 4 5 6 7; do
     echo "Day $DAY"
 
-    NEW_CURRENT="$WEEKLY_WORK_DIR/day${DAY}_current_accounts.txt"
-    NEW_MASTER="$WEEKLY_WORK_DIR/day${DAY}_master_accounts.txt"
+    DAY_DIR="$WEEKLY_WORK_DIR/day${DAY}"
+    mkdir -p "$DAY_DIR"
+
+    NEW_CURRENT="$DAY_DIR/day${DAY}_current_accounts.txt"
+    NEW_MASTER="$DAY_DIR/day${DAY}_master_accounts.txt"
 
     case $DAY in
         1) SESSIONS=("${DAY1_SESSIONS[@]}") ;;
@@ -65,7 +66,6 @@ for DAY in 1 2 3 4 5 6 7; do
 
     echo ""
 
-    # pass this day's output into the next day
     CURRENT_ACCOUNTS="$NEW_CURRENT"
     MASTER_ACCOUNTS="$NEW_MASTER"
 done

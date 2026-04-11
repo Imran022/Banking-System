@@ -1,10 +1,11 @@
-# Banking System - Phases 3 to 5
+# Banking System - Phases 3 to 6
 
 This repository contains the console-based CSCI 3060U Banking System implementation for:
 
 - the Front End ATM session flow from Phases 2-3
 - the new Phase 4 Back End overnight batch processor
 - the Phase 5 white-box unit tests and test report for the Back End
+- the Phase 6 daily/weekly integration shell scripts
 
 ## Front End Run
 
@@ -46,6 +47,16 @@ python backend_main.py <old_master_file> <merged_transaction_file> <new_master_f
 - Front End regression scripts: `bash scripts/run_tests.sh` then `bash scripts/check_outputs.sh`
 - Back End/unit tests: `python -m unittest discover -s tests -p "test_*.py"`
 - Phase 5 white-box tests: `C:\Users\waizm\AppData\Local\Python\pythoncore-3.14-64\python.exe -m unittest tests.test_phase5_whitebox -v`
+
+## Phase 6 Integration
+
+- Daily integration script: `bash daily.sh <current_accounts> <master_accounts> <new_current_accounts> <new_master_accounts> <session1> [session2 ...]`
+- Weekly integration script: `bash weekly.sh <initial_current_accounts> <initial_master_accounts>`
+- Each daily run now preserves:
+  - one transaction file per Front End session
+  - one merged daily transaction file
+  - the new Current and Master account files
+- Weekly runs store each day's files in a separate `weekly_run_*/dayN/` folder.
 
 ## Design Deliverable
 
