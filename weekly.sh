@@ -21,6 +21,26 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 DAILY_SCRIPT="$SCRIPT_DIR/daily.sh"
 INPUTS_DIR="$SCRIPT_DIR/inputs"
 
+if [ ! -f "$DAILY_SCRIPT" ]; then
+    echo "ERROR: daily.sh not found at $DAILY_SCRIPT" >&2
+    exit 1
+fi
+
+if [ ! -d "$INPUTS_DIR" ]; then
+    echo "ERROR: inputs directory not found at $INPUTS_DIR" >&2
+    exit 1
+fi
+
+if [ ! -f "$INITIAL_CURRENT" ]; then
+    echo "ERROR: Initial current accounts file not found: $INITIAL_CURRENT" >&2
+    exit 1
+fi
+
+if [ ! -f "$INITIAL_MASTER" ]; then
+    echo "ERROR: Initial master accounts file not found: $INITIAL_MASTER" >&2
+    exit 1
+fi
+
 WEEKLY_WORK_DIR="$SCRIPT_DIR/weekly_run_$(date +%Y%m%d_%H%M%S)"
 mkdir -p "$WEEKLY_WORK_DIR"
 
@@ -34,6 +54,15 @@ DAY4_SESSIONS=("$INPUTS_DIR/TC-10" "$INPUTS_DIR/TC-11" "$INPUTS_DIR/TC-12")
 DAY5_SESSIONS=("$INPUTS_DIR/TC-13" "$INPUTS_DIR/TC-14" "$INPUTS_DIR/TC-15")
 DAY6_SESSIONS=("$INPUTS_DIR/TC-16" "$INPUTS_DIR/TC-17" "$INPUTS_DIR/TC-18")
 DAY7_SESSIONS=("$INPUTS_DIR/TC-19" "$INPUTS_DIR/TC-20" "$INPUTS_DIR/TC-21")
+
+for required_input in \
+    "${DAY1_SESSIONS[@]}" "${DAY2_SESSIONS[@]}" "${DAY3_SESSIONS[@]}" \
+    "${DAY4_SESSIONS[@]}" "${DAY5_SESSIONS[@]}" "${DAY6_SESSIONS[@]}" "${DAY7_SESSIONS[@]}"; do
+    if [ ! -f "$required_input" ]; then
+        echo "ERROR: Missing required session input file: $required_input" >&2
+        exit 1
+    fi
+done
 
 CURRENT_ACCOUNTS="$INITIAL_CURRENT"
 MASTER_ACCOUNTS="$INITIAL_MASTER"

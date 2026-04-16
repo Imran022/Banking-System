@@ -11,6 +11,23 @@
 
 set -e
 
+resolve_python() {
+    if [ -n "${PYTHON_BIN:-}" ]; then
+        echo "$PYTHON_BIN"
+        return 0
+    fi
+    if command -v python3 >/dev/null 2>&1; then
+        echo "python3"
+        return 0
+    fi
+    if command -v python >/dev/null 2>&1; then
+        echo "python"
+        return 0
+    fi
+    echo "ERROR: Could not find python3 or python in PATH." >&2
+    exit 1
+}
+
 if [ "$#" -lt 5 ]; then
     echo "Usage: $0 <current_accounts> <master_accounts> <new_current_accounts> <new_master_accounts> <session1> [session2 ...]"
     exit 1
@@ -22,6 +39,7 @@ NEW_CURRENT_ACCOUNTS="$3"
 NEW_MASTER_ACCOUNTS="$4"
 shift 4
 SESSIONS=("$@")
+PYTHON_CMD="$(resolve_python)"
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 OUTPUT_DIR="$(cd "$(dirname "$NEW_CURRENT_ACCOUNTS")" && pwd)"
@@ -43,8 +61,13 @@ for SESSION_INPUT in "${SESSIONS[@]}"; do
     SESSION_NUM=$((SESSION_NUM + 1))
     TXN_OUT="$ARTIFACT_DIR/session_${SESSION_NUM}.atf"
 
+    if [ ! -f "$SESSION_INPUT" ]; then
+        echo "ERROR: Session input file not found: $SESSION_INPUT" >&2
+        exit 1
+    fi
+
     echo "  Session $SESSION_NUM: $SESSION_INPUT"
-    python3 "$SCRIPT_DIR/main.py" "$CURRENT_ACCOUNTS" "$TXN_OUT" < "$SESSION_INPUT"
+    "$PYTHON_CMD" "$SCRIPT_DIR/main.py" "$CURRENT_ACCOUNTS" "$TXN_OUT" < "$SESSION_INPUT"
 
     TXN_FILES+=("$TXN_OUT")
 done
@@ -53,7 +76,7 @@ echo "Merging $SESSION_NUM transaction file(s)..."
 cat "${TXN_FILES[@]}" > "$MERGED_TXN"
 
 echo "Running back end..."
-python3 "$SCRIPT_DIR/backend_main.py" \
+"$PYTHON_CMD" "$SCRIPT_DIR/backend_main.py" \
     "$MASTER_ACCOUNTS" \
     "$MERGED_TXN" \
     "$NEW_MASTER_ACCOUNTS" \
