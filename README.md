@@ -1,64 +1,52 @@
-# Banking System - Phases 3 to 6
+# Capitol Ledger
 
-This repository contains the console-based CSCI 3060U Banking System implementation for:
+A responsive dashboard for publicly disclosed U.S. congressional securities transactions. The published version is a static GitHub Pages site, refreshed every six hours from a public JSON feed. It requires no private key in the browser or deployment secrets.
 
-- the Front End ATM session flow from Phases 2-3
-- the new Phase 4 Back End overnight batch processor
-- the Phase 5 white-box unit tests and test report for the Back End
-- the Phase 6 daily/weekly integration shell scripts
+## Data source
 
-## Front End Run
+The live feed is the anonymous `/api/trades` and `/api/politicians` JSON service used by [Disclosed Capitol’s public trades website](https://www.disclosedcapitol.com/trades). I verified both endpoints return real trade/member records without an API key; the feed includes transaction and disclosure dates, politician, chamber, party, state, and the disclosed amount range. Trades are sorted by disclosure date and requested with a bounded page size. The ingestion snapshot includes at most 5,000 recent trades (up to the provider’s 10-year window) and all returned politician pages.
 
-```bash
-python main.py <current_accounts_file> <transaction_output_file>
-```
+This is a third-party aggregator of public filings, not a direct government API. The aggregator can change its website endpoint or data coverage. Entries link back to its public disclosure pages. The optional local Next.js app calls the public endpoint server-side; the published static site refreshes JSON snapshots through GitHub Actions.
 
-Example:
+## Run locally
+
+Requirements: Node.js 20 or newer.
 
 ```bash
-python main.py sample_accounts.txt transout.atf
+npm install
+npm run dev
 ```
 
-## Back End Run
+Open http://localhost:3000. To create a fresh static data snapshot for the published site:
 
 ```bash
-python backend_main.py <old_master_file> <merged_transaction_file> <new_master_file> <new_current_file>
+npm run ingest
+python3 -m http.server 8000 --directory site
 ```
 
-## Files and Formats
+Open http://localhost:8000. The ingestion is idempotent by provider transaction ID and refreshes `site/data/`.
 
-- Current accounts input supports the original layout and the optional plan-aware variant (`SP`/`NP`) to match the course discrepancy note.
-- Master accounts input supports the original Phase 4 layout and can also read the plan-aware starter-code style when present.
-- The Back End preserves the plan-field style it receives in the old master file instead of always forcing the extended format.
+## Deployment
 
-## Main Source Files
+The site is configured to publish from the `codex/capitol-ledger-live` branch with GitHub Actions. The workflow refreshes public data, enables Pages for the repository, and deploys the `site/` directory. It also runs every six hours.
 
-- `main.py`: Front End CLI and guided transaction prompts
-- `banking_system.py`: Front End session orchestration
-- `validator.py`: Front End business-rule validation
-- `backend_main.py`: Back End CLI entry point
-- `batch_processor.py`: Back End transaction application and constraint logging
-- `file_handler.py`: shared fixed-width file parsing and writing
-- `account.py`: shared account model for current and master files
-- `transaction.py`: shared transaction model and file serialization
+The hosting workflow does not require an API key or a user password. It does require a writable GitHub repository and GitHub Pages/Actions enabled for that repository. The Codex GitHub connection can write to the user’s existing repositories, but there is no dedicated Capitol Ledger repository in the connected account, and the available publishing tools cannot create a new repository. I have kept the publishing branch isolated from the existing default branch. The Pages URL uses that repository’s project path.
 
-## Tests
+## Site features
 
-- Front End regression scripts: `bash scripts/run_tests.sh` then `bash scripts/check_outputs.sh`
-- Back End/unit tests: `python -m unittest discover -s tests -p "test_*.py"`
-- Phase 5 white-box tests: `C:\Users\waizm\AppData\Local\Python\pythoncore-3.14-64\python.exe -m unittest tests.test_phase5_whitebox -v`
+- Recent disclosure feed with transaction date, disclosure date, disclosed amount range, buy/sell text, and over-45-day filing flags
+- Search and filters for member/ticker, chamber, party, direction, date, and disclosed range
+- Member directory with state, chamber, party, counts, and Bioguide portraits when available
+- Member history, activity-by-month chart, and top ticker list
+- Ticker lookup and leaderboards
+- Responsive layout and paginated long lists
+- Visible delay, public-data, range, and no-investment-advice disclosures
 
-## Phase 6 Integration
+## Data limitations
 
-- Daily integration script: `bash daily.sh <current_accounts> <master_accounts> <new_current_accounts> <new_master_accounts> <session1> [session2 ...]`
-- Weekly integration script: `bash weekly.sh <initial_current_accounts> <initial_master_accounts>`
-- Each daily run now preserves:
-  - one transaction file per Front End session
-  - one merged daily transaction file
-  - the new Current and Master account files
-- Weekly runs store each day's files in a separate `weekly_run_*/dayN/` folder.
-
-## Design Deliverable
-
-- `PHASE4_DESIGN.md`: Phase 4 architecture, UML-style class overview, and class/method intention table
-- `PHASE5_TEST_REPORT.md`: Phase 5 Back End white-box coverage analysis and test results
+- Disclosures are delayed; the feed does not represent real-time trading.
+- The public snapshot is capped at 5,000 recent trade records; older history may be absent.
+- Politician totals come from the data provider, while snapshot charts and rankings only count trades in the refreshed archive.
+- A missing ticker in a filing is represented as `N/A`; it is not guessed from the asset description.
+- Provider fields can be corrected or amended. The refresh process deduplicates stable IDs, but provider history remains authoritative.
+- This tracker presents public records for informational purposes only and is not financial advice.
