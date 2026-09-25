@@ -10,7 +10,7 @@ The ingestion job stores up to 5,000 recent transactions (within the provider’
 
 ## Publishing
 
-The `codex/capitol-ledger-live` branch isolates this site and refresh workflow from the repository default branch. GitHub Actions refreshes the data every six hours and commits changed snapshots only to that branch. The connected GitHub integration could push the branch but could not enable Pages for this repository. The static files and refreshed data are publicly available from the branch; publish them through a Pages-enabled repository or compatible static CDN if desired. No API key, Vercel token, or third-party account credentials are used. The first live data refresh succeeded.
+The `codex/capitol-ledger-live` branch isolates this site and refresh workflow from the repository default branch. GitHub Actions refreshes the data every six hours and commits changed snapshots only to that branch. GitHub Pages could not be enabled because the connected integration lacks permission to create a Pages site. For a public preview, open `https://htmlpreview.github.io/?https://github.com/Imran022/Banking-System/blob/codex/capitol-ledger-live/site/index.html`; the page loads its CSS, JavaScript, and JSON snapshot from the same public branch. No API key, Vercel token, or third-party account credentials are used. The first live data refresh succeeded.
 
 ## Run locally
 
