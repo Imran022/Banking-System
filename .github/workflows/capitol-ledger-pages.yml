@@ -3,7 +3,7 @@ on:
   push:
     branches: [codex/capitol-ledger-live]
   schedule:
-    - cron: '23 */6 * * *'
+    - cron: '*/5 * * * *'
   workflow_dispatch:
 permissions:
   contents: write
