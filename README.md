@@ -1,6 +1,6 @@
 # Capitol Ledger
 
-A responsive dashboard of public U.S. congressional securities disclosures. The standalone static website is in `site/`; a scheduled GitHub Action refreshes its JSON data every six hours without an API key.
+A responsive dashboard of public U.S. congressional securities disclosures. The standalone static website is in `site/`; a GitHub Actions job polls its JSON source every five minutes without an API key; open pages also recheck published data every five minutes.
 
 ## Data source
 
@@ -10,7 +10,7 @@ The ingestion job stores up to 5,000 recent transactions (within the provider’
 
 ## Publishing
 
-The `codex/capitol-ledger-live` branch isolates this site and refresh workflow from the repository default branch. GitHub Actions refreshes the data every six hours and commits changed snapshots only to that branch. GitHub Pages could not be enabled because the connected integration lacks permission to create a Pages site. For a public preview, open `https://htmlpreview.github.io/?https://github.com/Imran022/Banking-System/blob/codex/capitol-ledger-live/site/index.html`; the page loads its CSS, JavaScript, and JSON snapshot from the same public branch. No API key, Vercel token, or third-party account credentials are used. The first live data refresh succeeded.
+The `codex/capitol-ledger-live` branch contains the site and data. A small scheduler workflow on the repository default branch checks out this branch, polls every five minutes (offset from the top of the hour), and commits changed snapshots only to the tracker branch. GitHub Pages could not be enabled because the connected integration lacks permission to create a Pages site. For a public preview, open `https://htmlpreview.github.io/?https://github.com/Imran022/Banking-System/blob/codex/capitol-ledger-live/site/index.html`; the page loads its CSS, JavaScript, and JSON snapshot from the same public branch. No API key, Vercel token, or third-party account credentials are used. The first live data refresh succeeded.
 
 ## Run locally
 
@@ -40,7 +40,7 @@ Open http://localhost:8000.
 
 ## Limitations
 
-- Filing data is delayed and may be incomplete, corrected, or amended.
+- Filing data is delayed and may be incomplete, corrected, or amended. The polling interval is five minutes; GitHub may delay scheduled jobs, and the upstream aggregator must first receive each filing.
 - The static archive is capped at 5,000 recent trades; older histories may be missing.
 - Politician totals come from the provider; charts and rankings count records in this bounded snapshot.
 - The app does not guess a ticker when the provider marks it `N/A`.
