@@ -1,15 +1,8 @@
-name: Refresh Capitol Ledger public site
+name: Manually refresh Capitol Ledger disclosures
 on:
-  push:
-    branches: [codex/capitol-ledger-live]
-  schedule:
-    - cron: '*/5 * * * *'
   workflow_dispatch:
 permissions:
   contents: write
-concurrency:
-  group: refresh-public-data
-  cancel-in-progress: false
 jobs:
   refresh:
     runs-on: ubuntu-latest
@@ -20,7 +13,7 @@ jobs:
           node-version: 22
       - name: Refresh public disclosure snapshots
         run: node scripts/ingest.mjs
-      - name: Publish refreshed static data to this branch
+      - name: Publish refreshed data if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
