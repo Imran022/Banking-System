@@ -1,12 +1,16 @@
 # Capitol Ledger
 
-A responsive dashboard for publicly disclosed U.S. congressional securities transactions. The published version is a static GitHub Pages site, refreshed every six hours from a public JSON feed. It requires no private key in the browser or deployment secrets.
+A responsive dashboard of public U.S. congressional securities disclosures. The standalone static website is in `site/`; a scheduled GitHub Action refreshes its JSON data every six hours without an API key.
 
 ## Data source
 
-The live feed is the anonymous `/api/trades` and `/api/politicians` JSON service used by [Disclosed Capitol’s public trades website](https://www.disclosedcapitol.com/trades). I verified both endpoints return real trade/member records without an API key; the feed includes transaction and disclosure dates, politician, chamber, party, state, and the disclosed amount range. Trades are sorted by disclosure date and requested with a bounded page size. The ingestion snapshot includes at most 5,000 recent trades (up to the provider’s 10-year window) and all returned politician pages.
+The refresh uses the anonymous `/api/trades` and `/api/politicians` JSON endpoints used by [Disclosed Capitol’s public trades website](https://www.disclosedcapitol.com/trades). Direct requests return current public trades without authentication. Records include transaction/disclosure dates, politician, chamber, party, state, and disclosed amount ranges.
 
-This is a third-party aggregator of public filings, not a direct government API. The aggregator can change its website endpoint or data coverage. Entries link back to its public disclosure pages. The optional local Next.js app calls the public endpoint server-side; the published static site refreshes JSON snapshots through GitHub Actions.
+The ingestion job stores up to 5,000 recent transactions (within the provider’s 10-year request window), with all politician profiles, and deduplicates by provider trade ID. This is a third-party aggregator of public filings; its endpoint and coverage may change. Amounts remain the ranges reported in disclosures.
+
+## Publishing
+
+The `codex/capitol-ledger-live` branch isolates this site and refresh workflow from the repository default branch. GitHub Actions refreshes the data every six hours and commits changed snapshots only to that branch. The connected GitHub integration could push the branch but could not enable Pages for this repository. The static files and refreshed data are publicly available from the branch; publish them through a Pages-enabled repository or compatible static CDN if desired. No API key, Vercel token, or third-party account credentials are used. The first live data refresh succeeded.
 
 ## Run locally
 
@@ -17,36 +21,27 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:3000. To create a fresh static data snapshot for the published site:
+For the standalone version:
 
 ```bash
 npm run ingest
 python3 -m http.server 8000 --directory site
 ```
 
-Open http://localhost:8000. The ingestion is idempotent by provider transaction ID and refreshes `site/data/`.
+Open http://localhost:8000.
 
-## Deployment
+## Features
 
-The site is configured to publish from the `codex/capitol-ledger-live` branch with GitHub Actions. The workflow refreshes public data, enables Pages for the repository, and deploys the `site/` directory. It also runs every six hours.
+- Recent disclosures, amount ranges, transaction and disclosure dates, and over-45-day filing flags
+- Search and filters for member/ticker, chamber, party, direction, date, and amount bracket
+- Politician directory and profiles with Bioguide portraits when available
+- Member/ticker drilldown, monthly activity chart, and leaderboards
+- 25-row pagination, responsive mobile layout, and visible public-data/no-advice disclaimer
 
-The hosting workflow does not require an API key or a user password. It does require a writable GitHub repository and GitHub Pages/Actions enabled for that repository. The Codex GitHub connection can write to the user’s existing repositories, but there is no dedicated Capitol Ledger repository in the connected account, and the available publishing tools cannot create a new repository. I have kept the publishing branch isolated from the existing default branch. The Pages URL uses that repository’s project path.
+## Limitations
 
-## Site features
-
-- Recent disclosure feed with transaction date, disclosure date, disclosed amount range, buy/sell text, and over-45-day filing flags
-- Search and filters for member/ticker, chamber, party, direction, date, and disclosed range
-- Member directory with state, chamber, party, counts, and Bioguide portraits when available
-- Member history, activity-by-month chart, and top ticker list
-- Ticker lookup and leaderboards
-- Responsive layout and paginated long lists
-- Visible delay, public-data, range, and no-investment-advice disclosures
-
-## Data limitations
-
-- Disclosures are delayed; the feed does not represent real-time trading.
-- The public snapshot is capped at 5,000 recent trade records; older history may be absent.
-- Politician totals come from the data provider, while snapshot charts and rankings only count trades in the refreshed archive.
-- A missing ticker in a filing is represented as `N/A`; it is not guessed from the asset description.
-- Provider fields can be corrected or amended. The refresh process deduplicates stable IDs, but provider history remains authoritative.
-- This tracker presents public records for informational purposes only and is not financial advice.
+- Filing data is delayed and may be incomplete, corrected, or amended.
+- The static archive is capped at 5,000 recent trades; older histories may be missing.
+- Politician totals come from the provider; charts and rankings count records in this bounded snapshot.
+- The app does not guess a ticker when the provider marks it `N/A`.
+- Informational use only, not financial advice.
