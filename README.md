@@ -10,7 +10,7 @@ The ingestion job stores up to 5,000 recent transactions (within the provider’
 
 ## Publishing
 
-The `codex/capitol-ledger-live` branch contains the site and data. A small scheduler workflow on the repository default branch checks out this branch, polls every five minutes (offset from the top of the hour), and commits changed snapshots only to the tracker branch. GitHub Pages could not be enabled because the connected integration lacks permission to create a Pages site. For a public preview, open `https://htmlpreview.github.io/?https://github.com/Imran022/Banking-System/blob/codex/capitol-ledger-live/site/index.html`; the page loads its CSS, JavaScript, and JSON snapshot from the same public branch. No API key, Vercel token, or third-party account credentials are used. The first live data refresh succeeded.
+The `codex/capitol-ledger-live` branch contains the site and data. A small scheduler workflow on the repository default branch checks out this branch, polls every five minutes (offset from the top of the hour), and commits changed snapshots only to the tracker branch. GitHub Pages could not be enabled because the connected integration lacks permission to create a Pages site. For a public preview, open `https://htmlpreview.github.io/?https://github.com/Imran022/Banking-System/blob/codex/capitol-ledger-live/site/index-live-20260927.html`; this versioned entry page loads its CSS, JavaScript, and JSON snapshot from the same public branch. No API key, Vercel token, or third-party account credentials are used. The first live data refresh succeeded.
 
 ## Run locally
 
@@ -37,6 +37,19 @@ Open http://localhost:8000.
 - Politician directory and profiles with Bioguide portraits when available
 - Member/ticker drilldown, monthly activity chart, and leaderboards
 - 25-row pagination, responsive mobile layout, and visible public-data/no-advice disclaimer
+
+
+## Browser tests
+
+The Playwright suite covers member and ticker navigation, directory and feed filters, global search, ticker lookup, feed pagination, and profile filtering. Run it with:
+
+```bash
+npm ci
+npx playwright install chromium
+npm run test:e2e
+```
+
+To exercise the published preview rather than the local fixture, set `CAPITOL_LEDGER_URL` to the public preview URL before running the same command.
 
 ## Limitations
 
